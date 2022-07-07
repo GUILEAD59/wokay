@@ -16,16 +16,16 @@ class _askState extends State<ask> {
   List<Widget> containerList = [];
   late int _count;
   late bool _launching;
-  
+
   initState() {
     super.initState();
-    count = 0;
+    _count = 0;
     _launching = true;
     ok();
   }
 
-    ok ()
- async {
+  ok ()
+  async {
 
     await GDirectRequest.select(
         sql: "SELECT COUNT(recId) from rectification",
@@ -33,7 +33,7 @@ class _askState extends State<ask> {
         onSuccess: (onSuccess)
         {
 
-         var te = onSuccess.data[0];
+          var te = onSuccess.data[0];
           setState(() {
             _launching = false;
             _count = te[0];
@@ -44,9 +44,8 @@ class _askState extends State<ask> {
           print(onError);
           setState(() {
             _launching = false;
-            _count = te[0];
           });
-    });
+        });
 
 
   }
@@ -55,21 +54,21 @@ class _askState extends State<ask> {
   {
 
     return Container(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-        height: 100,
-        width: 400,
-        child: Card(
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+      height: 100,
+      width: 400,
+      child: Card(
         child: Row(
-        children: [
-        SizedBox(width: 5),
-        Icon(Icons.pending_actions, size: 50, ),
-        SizedBox(width: 5),
-        centerizedText(text: "Demande de rectification en attente pour"),
-        SizedBox(width: 5),
-        Icon(Icons.access_time_sharp),
-    ],
-    ),
-    ),
+          children: [
+            SizedBox(width: 5),
+            Icon(Icons.pending_actions, size: 50, ),
+            SizedBox(width: 5),
+            centerizedText(text: "Demande de rectification en attente pour"),
+            SizedBox(width: 5),
+            Icon(Icons.access_time_sharp),
+          ],
+        ),
+      ),
     );
   }
 
@@ -77,17 +76,17 @@ class _askState extends State<ask> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body:  _lauching ? Center(
-          child: Text('Launching');
-     
-        ) : ListView.builder(
-              itemCount: ok(),
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body:  _launching ? Center(
+            child: CircularProgressIndicator(color: Colors.blue,),
+
+          ) : ListView.builder(
+              itemCount: _count,
               itemBuilder: (BuildContext context, int index) {
                 return newDemand();
               }),
-      )
+        )
     );
   }
 }
