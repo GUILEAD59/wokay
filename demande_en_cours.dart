@@ -14,12 +14,18 @@ class ask extends StatefulWidget {
 class _askState extends State<ask> {
 
   List<Widget> containerList = [];
-
+  late int _count;
+  late bool _launching;
+  
+  initState() {
+    super.initState();
+    count = 0;
+    _launching = true;
+    ok();
+  }
 
     ok ()
  async {
-
-    int bof = 1;
 
     await GDirectRequest.select(
         sql: "SELECT COUNT(recId) from rectification",
@@ -28,24 +34,19 @@ class _askState extends State<ask> {
         {
 
          var te = onSuccess.data[0];
-         bof = te[0];
-
-         print("WOKAY");
-
-         print(te[0]);
-
-
+          setState(() {
+            _launching = false;
+            _count = te[0];
+          });
 
         },
-        onError: (onError)
-    {
-      print(onError);
-
-    }
-    );
-
-    return bof;
-
+        onError: (onError) {
+          print(onError);
+          setState(() {
+            _launching = false;
+            _count = te[0];
+          });
+    });
 
 
   }
@@ -78,7 +79,10 @@ class _askState extends State<ask> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body:  ListView.builder(
+        body:  _lauching ? Center(
+          child: Text('Launching');
+     
+        ) : ListView.builder(
               itemCount: ok(),
               itemBuilder: (BuildContext context, int index) {
                 return newDemand();
