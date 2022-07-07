@@ -36,7 +36,6 @@ class _askState extends State<ask> {
           var te = onSuccess.data[0];
           setState(() {
             _launching = false;
-            _count = te[0];
           });
 
         },
@@ -73,20 +72,30 @@ class _askState extends State<ask> {
   }
 
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body:  _launching ? Center(
-            child: CircularProgressIndicator(color: Colors.blue,),
-
-          ) : ListView.builder(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body:  _launching ? Center(
+          child: Text('Launching');
+     
+        ) : _body()
+       )
+    );
+  }
+  
+  Widget _body() {
+     if(_count > 0) {
+        return ListView.builder(
               itemCount: _count,
               itemBuilder: (BuildContext context, int index) {
                 return newDemand();
-              }),
-        )
-    );
+              });
+     } else {
+         return Center(
+           child: Text("Nothing yet")
+           );
+     }     
   }
 }
